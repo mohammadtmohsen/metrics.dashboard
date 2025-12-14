@@ -1,63 +1,100 @@
-import Image from 'next/image';
+'use client';
 
-export default function Home() {
+import { JSX, useMemo, useState } from 'react';
+import DatasetBrowser from '@/components/datasets/DatasetBrowser';
+import MetricsChart from '@/components/metrics/MetricsChart';
+import MetricsToolbar, {
+  TimeRangeSelection,
+} from '@/components/metrics/MetricsToolbar';
+import useDatasets from '@/hooks/useDatasets';
+import useMetrics from '@/hooks/useMetrics';
+import { MetricField } from '@/services/metrics.service';
+import { Dataset } from '@/services/datasets.service';
+
+const METRIC_FIELDS: MetricField[] = [
+  'REQUESTS',
+  'ERRORS',
+  'P50_LATENCY',
+  'P95_LATENCY',
+  'P99_LATENCY',
+];
+
+const defaultRange = (): TimeRangeSelection => {
+  const to = Date.now();
+  const from = to - 2 * 60 * 60 * 1000;
+  return { preset: '2h', from, to };
+};
+
+export default function Home(): JSX.Element {
+  const [range, setRange] = useState<TimeRangeSelection>(() => defaultRange());
+  const [selectedFields, setSelectedFields] =
+    useState<MetricField[]>(METRIC_FIELDS);
+  const [selectedDatasetId, setSelectedDatasetId] = useState<
+    string | undefined
+  >(undefined);
+
+  const datasetsQuery = useDatasets({});
+  const datasets = useMemo(
+    () => datasetsQuery.data?.datasets ?? [],
+    [datasetsQuery.data]
+  );
+  const isDatasetsLoading = datasetsQuery.isPending;
+
+  const effectiveDatasetId = selectedDatasetId ?? datasets[0]?.id;
+
+  const selectedDataset = useMemo(
+    () => datasets.find((dataset) => dataset.id === effectiveDatasetId),
+    [datasets, effectiveDatasetId]
+  );
+
+  const metricsQuery = useMetrics({
+    datasetId: selectedDataset?.id,
+    from: range.from,
+    to: range.to,
+    fields: selectedFields,
+  });
+
+  const chartData = metricsQuery.data?.points ?? [];
+  const chartError = metricsQuery.isError ? metricsQuery.error : null;
+  const chartLoading = metricsQuery.isPending || metricsQuery.isFetching;
+
+  const handleSelectDataset = (dataset: Dataset) => {
+    setSelectedDatasetId(dataset.id);
+  };
+
   return (
-    <div className='flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black'>
-      <main className='flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start'>
-        <Image
-          className='dark:invert'
-          src='/next.svg'
-          alt='Next.js logo'
-          width={100}
-          height={20}
-          priority
-        />
-        <div className='flex flex-col items-center gap-6 text-center sm:items-start sm:text-left'>
-          <h1 className='max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50'>
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className='max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400'>
-            Looking for a starting point or more instructions? Head over to{' '}
-            <a
-              href='https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-              className='font-medium text-zinc-950 dark:text-zinc-50'
-            >
-              Templates
-            </a>{' '}
-            or the{' '}
-            <a
-              href='https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-              className='font-medium text-zinc-950 dark:text-zinc-50'
-            >
-              Learning
-            </a>{' '}
-            center.
-          </p>
+    <div className='min-h-screen bg-zinc-50 py-10'>
+      <main className='mx-auto flex max-w-6xl flex-col gap-6 px-4 md:px-6 lg:flex-row'>
+        <div className='w-full lg:w-[320px]'>
+          <DatasetBrowser
+            selectedId={effectiveDatasetId}
+            onSelect={handleSelectDataset}
+          />
         </div>
-        <div className='flex flex-col gap-4 text-base font-medium sm:flex-row'>
-          <a
-            className='flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-39.5'
-            href='https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Image
-              className='dark:invert'
-              src='/vercel.svg'
-              alt='Vercel logomark'
-              width={16}
-              height={16}
+        <div className='flex w-full flex-col gap-4'>
+          <MetricsToolbar
+            availableFields={METRIC_FIELDS}
+            selectedFields={selectedFields}
+            onFieldsChange={setSelectedFields}
+            range={range}
+            onRangeChange={setRange}
+            disabled={!selectedDataset}
+          />
+          {selectedDataset ? (
+            <MetricsChart
+              data={chartData}
+              metrics={selectedFields}
+              loading={chartLoading}
+              error={chartError}
+              annotations={metricsQuery.data?.annotations}
             />
-            Deploy Now
-          </a>
-          <a
-            className='flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/8 px-5 transition-colors hover:border-transparent hover:bg-black/4 dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-39.5'
-            href='https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            Documentation
-          </a>
+          ) : (
+            <div className='rounded-lg border border-zinc-200 bg-white p-4 text-sm text-zinc-700 shadow-sm'>
+              {isDatasetsLoading
+                ? 'Loading datasets...'
+                : 'Select a dataset to view metrics.'}
+            </div>
+          )}
         </div>
       </main>
     </div>
