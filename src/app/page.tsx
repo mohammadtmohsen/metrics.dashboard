@@ -34,6 +34,7 @@ export default function Home(): JSX.Element {
   const [selectedDatasetId, setSelectedDatasetId] = useState<
     string | undefined
   >(undefined);
+  const [isChartMaximized, setIsChartMaximized] = useState(false);
 
   const datasetsQuery = useDatasets({});
   const datasets = useMemo(
@@ -66,19 +67,24 @@ export default function Home(): JSX.Element {
 
   return (
     <div className='flex h-screen flex-col overflow-hidden bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100'>
-      <HeaderControls />
+      <HeaderControls
+        isMaximized={isChartMaximized}
+        onToggleMaximize={() => setIsChartMaximized((prev) => !prev)}
+      />
       <div className='flex-1 overflow-y-auto px-4 py-6 md:px-6'>
         <div className='mx-auto flex max-w-[1400px] flex-col gap-6 lg:flex-row'>
-          {/* Left Column: Dataset Browser */}
-          <div className='w-full lg:w-[340px] shrink-0'>
-            <DatasetBrowser
-              selectedId={effectiveDatasetId}
-              onSelect={handleSelectDataset}
-            />
-          </div>
+          {/* Left Column: Dataset Browser - Hidden when maximized */}
+          {!isChartMaximized && (
+            <div className='w-full shrink-0 lg:w-[340px]'>
+              <DatasetBrowser
+                selectedId={effectiveDatasetId}
+                onSelect={handleSelectDataset}
+              />
+            </div>
+          )}
 
           {/* Right Column: Toolbar + Content */}
-          <div className='flex flex-1 flex-col gap-6 min-w-0'>
+          <div className='flex min-w-0 flex-1 flex-col gap-6'>
             <MetricsToolbar
               availableFields={METRIC_FIELDS}
               selectedFields={selectedFields}
@@ -90,7 +96,7 @@ export default function Home(): JSX.Element {
 
             <div className='flex flex-col gap-6 xl:flex-row'>
               {/* Chart Area */}
-              <div className='flex-1 min-w-0'>
+              <div className='min-w-0 flex-1'>
                 {selectedDataset ? (
                   <MetricsChart
                     data={chartData}
@@ -108,10 +114,12 @@ export default function Home(): JSX.Element {
                 )}
               </div>
 
-              {/* Annotations Panel */}
-              <div className='w-full xl:w-[320px] shrink-0'>
-                <AnnotationsPanel />
-              </div>
+              {/* Annotations Panel - Hidden when maximized */}
+              {!isChartMaximized && (
+                <div className='w-full shrink-0 xl:w-[320px]'>
+                  <AnnotationsPanel />
+                </div>
+              )}
             </div>
           </div>
         </div>

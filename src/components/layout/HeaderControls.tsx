@@ -3,9 +3,17 @@
 import { JSX, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Maximize } from 'lucide-react';
+import { Sun, Moon, Maximize, Minimize } from 'lucide-react';
 
-export function HeaderControls(): JSX.Element {
+type HeaderControlsProps = {
+  isMaximized?: boolean;
+  onToggleMaximize?: () => void;
+};
+
+export function HeaderControls({
+  isMaximized = false,
+  onToggleMaximize,
+}: HeaderControlsProps): JSX.Element {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -16,7 +24,7 @@ export function HeaderControls(): JSX.Element {
   }, []);
 
   return (
-    <header className='flex w-full flex-col gap-3 border-b border-zinc-200 bg-white/80 px-4 py-3 text-zinc-900 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-100 md:px-6 max-w-[1400px] mx-auto'>
+    <header className='mx-auto flex w-full max-w-[1400px] flex-col gap-3 border-b border-zinc-200 bg-white/80 px-4 py-3 text-zinc-900 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-100 md:px-6'>
       <div className='flex items-center justify-between'>
         {/* Left Side: Title */}
         <div className='flex items-center gap-3'>
@@ -57,10 +65,19 @@ export function HeaderControls(): JSX.Element {
 
             {/* Expand / Focus View */}
             <button
-              className='flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
-              aria-label='Expand view'
+              onClick={onToggleMaximize}
+              className={`flex h-8 w-8 items-center justify-center rounded-md transition-colors ${
+                isMaximized
+                  ? 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100'
+                  : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
+              }`}
+              aria-label={isMaximized ? 'Minimize view' : 'Maximize view'}
             >
-              <Maximize className='h-4 w-4' />
+              {isMaximized ? (
+                <Minimize className='h-4 w-4' />
+              ) : (
+                <Maximize className='h-4 w-4' />
+              )}
             </button>
           </div>
           <div className='flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 shadow-sm dark:border-emerald-500/50 dark:bg-emerald-500/10 dark:text-emerald-200'>
