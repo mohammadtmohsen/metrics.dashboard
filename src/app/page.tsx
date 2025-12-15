@@ -92,6 +92,7 @@ export default function Home(): JSX.Element {
               range={range}
               onRangeChange={setRange}
               disabled={!selectedDataset}
+              onRefresh={() => metricsQuery.refetch()}
             />
 
             <div className='flex flex-col gap-6 xl:flex-row'>

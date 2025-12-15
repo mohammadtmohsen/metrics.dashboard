@@ -19,6 +19,7 @@ type MetricsToolbarProps = {
   range: TimeRangeSelection;
   onRangeChange: (range: TimeRangeSelection) => void;
   disabled?: boolean;
+  onRefresh?: () => void;
 };
 
 const fieldLabels: Record<MetricField, string> = {
@@ -59,6 +60,7 @@ export function MetricsToolbar({
   range,
   onRangeChange,
   disabled = false,
+  onRefresh,
 }: MetricsToolbarProps): JSX.Element {
   const [customFrom, setCustomFrom] = useState<string>(() =>
     toInputValue(range.from)
@@ -66,9 +68,6 @@ export function MetricsToolbar({
   const [customTo, setCustomTo] = useState<string>(() =>
     toInputValue(range.to)
   );
-
-  // Fake refresh loading state for visual effect
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const sortedFields = useMemo(
     () => [...availableFields].filter(Boolean).sort(),
@@ -122,10 +121,9 @@ export function MetricsToolbar({
   };
 
   const handleRefresh = () => {
-    setIsRefreshing(true);
-    // Simulate refresh delay
-    setTimeout(() => setIsRefreshing(false), 800);
-    // In a real app, you would verify/refetch data here
+    if (onRefresh) {
+      onRefresh();
+    }
   };
 
   const isPresetActive = (preset: TimeRangePreset): boolean =>
@@ -147,13 +145,9 @@ export function MetricsToolbar({
         <button
           type='button'
           onClick={handleRefresh}
-          className={`flex items-center gap-2 rounded-md border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-zinc-100 ${
-            isRefreshing ? 'opacity-70' : ''
-          }`}
+          className='flex items-center gap-2 rounded-md border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:hover:text-zinc-100'
         >
-          <RefreshCw
-            className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`}
-          />
+          <RefreshCw className='h-3.5 w-3.5' />
           Refresh
         </button>
       </div>
