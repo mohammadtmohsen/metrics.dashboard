@@ -3,7 +3,7 @@
 import { JSX, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Bell, Maximize } from 'lucide-react';
+import { Sun, Moon, Maximize } from 'lucide-react';
 
 export function HeaderControls(): JSX.Element {
   const { resolvedTheme, setTheme } = useTheme();
@@ -53,14 +53,6 @@ export function HeaderControls(): JSX.Element {
               ) : (
                 <Sun className='h-4 w-4' />
               )}
-            </button>
-
-            {/* Notifications */}
-            <button
-              className='flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
-              aria-label='Notifications'
-            >
-              <Bell className='h-4 w-4' />
             </button>
 
             {/* Expand / Focus View */}
