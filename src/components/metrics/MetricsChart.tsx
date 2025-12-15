@@ -3,7 +3,6 @@
 import { JSX, ReactNode, useMemo } from 'react';
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -115,9 +114,9 @@ export function MetricsChart({
 
   if (loading) {
     return (
-      <div className='space-y-3 rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900'>
-        <div className='h-4 w-32 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700' />
-        <div className='h-80 animate-pulse rounded bg-zinc-100 dark:bg-zinc-800' />
+      <div className='flex min-h-[475px] flex-col rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900'>
+        <div className='mb-3 h-4 w-32 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700' />
+        <div className='flex-1 animate-pulse rounded bg-zinc-100 dark:bg-zinc-800' />
       </div>
     );
   }
@@ -166,7 +165,6 @@ export function MetricsChart({
               contentStyle={tooltipStyle}
               labelStyle={labelStyle}
             />
-            <Legend wrapperStyle={labelStyle} />
             {metrics.map((metric) => (
               <Line
                 key={metric}
@@ -192,6 +190,20 @@ export function MetricsChart({
             ))}
           </LineChart>
         </ResponsiveContainer>
+      </div>
+      <div className='mt-4 flex flex-wrap justify-center gap-4 border-t border-zinc-100 pt-4 dark:border-zinc-800'>
+        {metrics.map((metric) => (
+          <div
+            key={metric}
+            className='flex items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-400'
+          >
+            <span
+              className='h-2.5 w-2.5 rounded-full'
+              style={{ backgroundColor: COLORS[metric] }}
+            />
+            {metric}
+          </div>
+        ))}
       </div>
     </div>
   );
