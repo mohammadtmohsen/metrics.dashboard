@@ -73,15 +73,21 @@ export default function Home(): JSX.Element {
       />
       <div className='flex-1 overflow-y-auto px-4 py-6 md:px-6'>
         <div className='mx-auto flex max-w-[1400px] flex-col gap-6 lg:flex-row'>
-          {/* Left Column: Dataset Browser - Hidden when maximized */}
-          {!isChartMaximized && (
-            <div className='w-full shrink-0 lg:w-[340px]'>
+          {/* Left Column: Dataset Browser - Animated visibility */}
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              isChartMaximized
+                ? 'w-0 opacity-0 lg:w-0'
+                : 'w-full opacity-100 lg:w-[340px]'
+            }`}
+          >
+            <div className='w-full lg:w-[340px]'>
               <DatasetBrowser
                 selectedId={effectiveDatasetId}
                 onSelect={handleSelectDataset}
               />
             </div>
-          )}
+          </div>
 
           {/* Right Column: Toolbar + Content */}
           <div className='flex min-w-0 flex-1 flex-col gap-6'>
@@ -97,7 +103,7 @@ export default function Home(): JSX.Element {
 
             <div className='flex flex-col gap-6 xl:flex-row'>
               {/* Chart Area */}
-              <div className='min-w-0 flex-1'>
+              <div className='min-w-0 flex-1 transition-all duration-300 ease-in-out'>
                 {selectedDataset ? (
                   <MetricsChart
                     data={chartData}
@@ -115,12 +121,18 @@ export default function Home(): JSX.Element {
                 )}
               </div>
 
-              {/* Annotations Panel - Hidden when maximized */}
-              {!isChartMaximized && (
-                <div className='w-full shrink-0 xl:w-[320px]'>
+              {/* Annotations Panel - Animated visibility */}
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  isChartMaximized
+                    ? 'h-0 opacity-0 xl:h-auto xl:w-0'
+                    : 'h-auto opacity-100 xl:w-[320px]'
+                }`}
+              >
+                <div className='w-full xl:w-[320px]'>
                   <AnnotationsPanel />
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
