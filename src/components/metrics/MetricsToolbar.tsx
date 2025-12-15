@@ -113,9 +113,9 @@ export function MetricsToolbar({
     range.preset === preset && preset !== 'custom';
 
   return (
-    <div className='flex flex-col gap-4 rounded-lg border border-zinc-200 bg-white p-4 shadow-sm'>
+    <div className='flex flex-col gap-4 rounded-lg border border-zinc-200 bg-white p-4 text-zinc-900 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100'>
       <div className='flex flex-wrap items-center gap-2'>
-        <span className='text-sm font-semibold text-zinc-900'>Time Range</span>
+        <span className='text-sm font-semibold text-zinc-900 dark:text-zinc-100'>Time Range</span>
         <div className='flex flex-wrap gap-2'>
           {presetDefinitions.map(({ label, preset, minutes }) => (
             <button
@@ -125,8 +125,8 @@ export function MetricsToolbar({
               onClick={() => handlePresetSelect(preset, minutes)}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
                 isPresetActive(preset)
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'border border-zinc-200 bg-white text-zinc-800 hover:border-emerald-300 hover:text-emerald-700'
+                  ? 'bg-emerald-600 text-white shadow-sm dark:bg-emerald-500'
+                  : 'border border-zinc-200 bg-white text-zinc-800 hover:border-emerald-300 hover:text-emerald-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:border-emerald-400 dark:hover:text-emerald-100'
               } ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
             >
               {label}
@@ -137,7 +137,7 @@ export function MetricsToolbar({
 
       {range.preset === 'custom' ? (
         <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-          <label className='flex flex-col gap-1 text-sm text-zinc-700'>
+          <label className='flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300'>
             From
             <input
               type='datetime-local'
@@ -146,17 +146,17 @@ export function MetricsToolbar({
                 handleCustomChange('from', event.target.value)
               }
               disabled={disabled}
-              className='rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:opacity-60'
+              className='rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-emerald-400 dark:focus:ring-emerald-900/60'
             />
           </label>
-          <label className='flex flex-col gap-1 text-sm text-zinc-700'>
+          <label className='flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300'>
             To
             <input
               type='datetime-local'
               value={customTo}
               onChange={(event) => handleCustomChange('to', event.target.value)}
               disabled={disabled}
-              className='rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:opacity-60'
+              className='rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:border-emerald-400 dark:focus:ring-emerald-900/60'
             />
           </label>
         </div>
@@ -164,14 +164,14 @@ export function MetricsToolbar({
 
       <div className='flex flex-col gap-3'>
         <div className='flex items-center justify-between'>
-          <span className='text-sm font-semibold text-zinc-900'>Metrics</span>
-          <span className='text-xs text-zinc-500'>
+          <span className='text-sm font-semibold text-zinc-900 dark:text-zinc-100'>Metrics</span>
+          <span className='text-xs text-zinc-500 dark:text-zinc-400'>
             {selectedFields.length} selected
           </span>
         </div>
 
         {sortedFields.length === 0 ? (
-          <div className='rounded-md border border-dashed border-zinc-300 px-3 py-3 text-sm text-zinc-600'>
+          <div className='rounded-md border border-dashed border-zinc-300 px-3 py-3 text-sm text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300'>
             No metrics available for this dataset.
           </div>
         ) : (
@@ -186,8 +186,8 @@ export function MetricsToolbar({
                   onClick={() => toggleField(field)}
                   className={`rounded-full border px-3 py-1 text-sm font-medium transition ${
                     isSelected
-                      ? 'border-emerald-400 bg-emerald-50 text-emerald-800'
-                      : 'border-zinc-200 bg-white text-zinc-800 hover:border-emerald-300 hover:text-emerald-700'
+                      ? 'border-emerald-400 bg-emerald-50 text-emerald-800 dark:border-emerald-400 dark:bg-emerald-500/10 dark:text-emerald-100'
+                      : 'border-zinc-200 bg-white text-zinc-800 hover:border-emerald-300 hover:text-emerald-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:border-emerald-400 dark:hover:text-emerald-100'
                   } ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
                 >
                   {fieldLabels[field] ?? field}

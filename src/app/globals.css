@@ -3,6 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0b0b0f;
+  --foreground: #e5e7eb;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -12,15 +19,14 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* tailwindcss safelist: dark:bg-zinc-900 dark:bg-zinc-950 dark:bg-zinc-900/80 dark:border-zinc-800 dark:border-zinc-900 dark:text-zinc-100 dark:hover:bg-emerald-500/10 dark:hover:border-emerald-500/60 dark:bg-emerald-500/10 */
+html {
+  background: var(--background);
+  color: var(--foreground);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: transparent;
+  color: inherit;
   font-family: Arial, Helvetica, sans-serif;
 }
