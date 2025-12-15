@@ -1,22 +1,32 @@
 'use client';
 
-import { JSX } from 'react';
+import { JSX, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useTheme } from 'next-themes';
+import { Sun, Moon, Bell, Maximize } from 'lucide-react';
 
 export function HeaderControls(): JSX.Element {
   const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  // defaulted to false if unresolved to match server side 'light' usually, check hydration
-  const isDark = resolvedTheme === 'dark';
+  useEffect(() => {
+    // delay to avoid synchronous state update warning
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <header className='flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white/80 px-4 py-3 text-zinc-900 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-100'>
+    <header className='flex w-full flex-col gap-3 border-b border-zinc-200 bg-white/80 px-4 py-3 text-zinc-900 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-100 md:px-6'>
       <div className='flex items-center justify-between'>
+        {/* Left Side: Title */}
         <div className='flex items-center gap-3'>
-          <div className='flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 shadow-sm dark:border-emerald-500/50 dark:bg-emerald-500/10 dark:text-emerald-200'>
-            <span className='h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.18)]' />
-            Live
-          </div>
+          <Image
+            src='/icon.svg'
+            alt='Logo'
+            width={40}
+            height={40}
+            className='h-10 w-10'
+          />
           <div className='flex flex-col leading-tight'>
             <span className='text-sm font-semibold text-zinc-900 dark:text-zinc-100'>
               Metrics dashboard
@@ -26,31 +36,45 @@ export function HeaderControls(): JSX.Element {
             </span>
           </div>
         </div>
+
+        {/* Right Side: Live Status + Icon Group */}
         <div className='flex items-center gap-3'>
-          <div
-            className='rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-600 dark:border-zinc-800 dark:text-zinc-300'
-            suppressHydrationWarning
-          >
-            {isDark ? 'Dark mode' : 'Light mode'}
+          <div className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white/50 p-1 dark:border-zinc-800 dark:bg-zinc-900/50'>
+            {/* Theme Toggle */}
+            <button
+              onClick={() =>
+                setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
+              }
+              className='flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
+              aria-label='Toggle theme'
+            >
+              {mounted && resolvedTheme === 'dark' ? (
+                <Moon className='h-4 w-4' />
+              ) : (
+                <Sun className='h-4 w-4' />
+              )}
+            </button>
+
+            {/* Notifications */}
+            <button
+              className='flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
+              aria-label='Notifications'
+            >
+              <Bell className='h-4 w-4' />
+            </button>
+
+            {/* Expand / Focus View */}
+            <button
+              className='flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
+              aria-label='Expand view'
+            >
+              <Maximize className='h-4 w-4' />
+            </button>
           </div>
-          <button
-            type='button'
-            aria-pressed={isDark}
-            onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className='flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-sm font-semibold text-zinc-800 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:border-emerald-400 dark:hover:text-emerald-200 disabled:cursor-not-allowed disabled:opacity-60'
-            suppressHydrationWarning
-          >
-            <span
-              className={`h-2.5 w-2.5 rounded-full ring-2 ring-inset ${
-                isDark
-                  ? 'bg-emerald-300 ring-emerald-500'
-                  : 'bg-amber-300 ring-amber-500'
-              }`}
-            />
-            <span suppressHydrationWarning>
-              {isDark ? 'Switch to light' : 'Switch to dark'}
-            </span>
-          </button>
+          <div className='flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 shadow-sm dark:border-emerald-500/50 dark:bg-emerald-500/10 dark:text-emerald-200'>
+            <span className='h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.18)]' />
+            Live
+          </div>
         </div>
       </div>
     </header>
