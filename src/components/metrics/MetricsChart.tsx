@@ -18,7 +18,7 @@ import {
   MetricsAnnotation,
 } from '@/services/metrics.service';
 import { NormalizedApiError } from '@/services/api';
-import { useTheme } from '@/components/layout/ThemeProvider';
+import { useTheme } from 'next-themes';
 
 type MetricsChartProps = {
   data: MetricPoint[];
@@ -76,7 +76,9 @@ export function MetricsChart({
   height = 360,
   annotations = [],
 }: MetricsChartProps): JSX.Element {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
+  // Use resolvedTheme for calculations to ensure system preference is respected
+  const theme = resolvedTheme;
   const chartData = useMemo(
     () =>
       data.map((point) => ({ timestamp: point.timestamp, ...point.values })),

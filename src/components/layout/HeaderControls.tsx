@@ -1,11 +1,13 @@
 'use client';
 
 import { JSX } from 'react';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from 'next-themes';
 
 export function HeaderControls(): JSX.Element {
-  const { theme, toggleTheme, isReady } = useTheme();
-  const isDark = theme === 'dark';
+  const { resolvedTheme, setTheme } = useTheme();
+
+  // defaulted to false if unresolved to match server side 'light' usually, check hydration
+  const isDark = resolvedTheme === 'dark';
 
   return (
     <header className='flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white/80 px-4 py-3 text-zinc-900 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-100'>
@@ -25,15 +27,18 @@ export function HeaderControls(): JSX.Element {
           </div>
         </div>
         <div className='flex items-center gap-3'>
-          <div className='rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-600 dark:border-zinc-800 dark:text-zinc-300'>
+          <div
+            className='rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-600 dark:border-zinc-800 dark:text-zinc-300'
+            suppressHydrationWarning
+          >
             {isDark ? 'Dark mode' : 'Light mode'}
           </div>
           <button
             type='button'
             aria-pressed={isDark}
-            onClick={toggleTheme}
-            disabled={!isReady}
+            onClick={() => setTheme(isDark ? 'light' : 'dark')}
             className='flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-sm font-semibold text-zinc-800 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:border-emerald-400 dark:hover:text-emerald-200 disabled:cursor-not-allowed disabled:opacity-60'
+            suppressHydrationWarning
           >
             <span
               className={`h-2.5 w-2.5 rounded-full ring-2 ring-inset ${
@@ -42,7 +47,9 @@ export function HeaderControls(): JSX.Element {
                   : 'bg-amber-300 ring-amber-500'
               }`}
             />
-            <span>{isDark ? 'Switch to light' : 'Switch to dark'}</span>
+            <span suppressHydrationWarning>
+              {isDark ? 'Switch to light' : 'Switch to dark'}
+            </span>
           </button>
         </div>
       </div>

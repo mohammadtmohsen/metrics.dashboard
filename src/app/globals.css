@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -19,7 +21,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* tailwindcss safelist: dark:bg-zinc-900 dark:bg-zinc-950 dark:bg-zinc-900/80 dark:border-zinc-800 dark:border-zinc-900 dark:text-zinc-100 dark:hover:bg-emerald-500/10 dark:hover:border-emerald-500/60 dark:bg-emerald-500/10 */
 html {
   background: var(--background);
   color: var(--foreground);

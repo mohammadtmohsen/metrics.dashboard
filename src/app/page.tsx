@@ -66,7 +66,7 @@ export default function Home(): JSX.Element {
 
   return (
     <div className='min-h-screen bg-zinc-50 py-10 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100'>
-      <div className='mx-auto flex max-w-6xl flex-col gap-6 px-4 text-inherit md:px-6'>
+      <div className='mx-auto flex xmax-w-6xl flex-col gap-6 px-4 text-inherit md:px-6'>
         <HeaderControls />
         <main className='flex flex-col gap-6 text-inherit lg:flex-row'>
           <div className='w-full lg:w-70 xl:w-[320px]'>

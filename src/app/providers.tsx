@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { JSX, ReactNode, useState } from 'react';
-import ThemeProvider from '@/components/layout/ThemeProvider';
+import { ThemeProvider } from 'next-themes';
 
 type ProvidersProps = {
   children: ReactNode;
@@ -23,7 +23,14 @@ export function Providers({ children }: ProvidersProps): JSX.Element {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <ThemeProvider
+        attribute='class'
+        defaultTheme='system'
+        enableSystem
+        disableTransitionOnChange
+      >
+        {children}
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
