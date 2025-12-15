@@ -16,7 +16,7 @@ export function HeaderControls(): JSX.Element {
   }, []);
 
   return (
-    <header className='flex w-full flex-col gap-3 border-b border-zinc-200 bg-white/80 px-4 py-3 text-zinc-900 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-100 md:px-6'>
+    <header className='flex w-full flex-col gap-3 border-b border-zinc-200 bg-white/80 px-4 py-3 text-zinc-900 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-100 md:px-6 max-w-[1400px] mx-auto'>
       <div className='flex items-center justify-between'>
         {/* Left Side: Title */}
         <div className='flex items-center gap-3'>
