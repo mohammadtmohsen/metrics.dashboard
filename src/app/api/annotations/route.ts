@@ -1,20 +1,34 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
+import type { Annotation } from '@/types/annotation';
 
-type Annotation = {
-  id: string;
-  timestamp: number;
-  text: string;
-};
+const createId = (): string => randomUUID();
+const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+const randomDelay = (): number => 500 + Math.floor(Math.random() * 301);
 
 const annotations: Annotation[] = [];
 
-const createId = (): string => randomUUID();
+const addAnnotation = (annotation: Annotation): Annotation => {
+  annotations.push(annotation);
+  return annotation;
+};
+
+const deleteAnnotationById = (id: string): Annotation | undefined => {
+  const index = annotations.findIndex((item) => item.id === id);
+  if (index === -1) {
+    return undefined;
+  }
+
+  const [removed] = annotations.splice(index, 1);
+  return removed;
+};
 
 const isValidTimestamp = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
 
 export async function GET(): Promise<NextResponse> {
+  await delay(randomDelay());
   return NextResponse.json({ annotations });
 }
 
@@ -32,14 +46,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!isValidTimestamp(timestamp)) {
     return NextResponse.json(
       { message: 'timestamp is required and must be a number (ms)' },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (typeof text !== 'string' || !text.trim()) {
     return NextResponse.json(
       { message: 'text is required and must be a non-empty string' },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -49,8 +63,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     text: text.trim(),
   };
 
-  annotations.push(annotation);
+  addAnnotation(annotation);
 
+  await delay(randomDelay());
   return NextResponse.json({ annotation }, { status: 201 });
 }
 
@@ -61,17 +76,18 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
   if (!id) {
     return NextResponse.json(
       { message: 'id query parameter is required' },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
-  const index = annotations.findIndex((item) => item.id === id);
-
-  if (index === -1) {
-    return NextResponse.json({ message: 'Annotation not found' }, { status: 404 });
+  const removed = deleteAnnotationById(id);
+  if (!removed) {
+    return NextResponse.json(
+      { message: 'Annotation not found' },
+      { status: 404 }
+    );
   }
 
-  annotations.splice(index, 1);
-
+  await delay(randomDelay());
   return NextResponse.json({ id });
 }

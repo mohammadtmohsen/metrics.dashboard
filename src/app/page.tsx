@@ -9,6 +9,7 @@ import MetricsToolbar, {
 } from '@/components/metrics/MetricsToolbar';
 import useDatasets from '@/hooks/useDatasets';
 import useMetrics from '@/hooks/useMetrics';
+import { useAnnotationsQuery } from '@/hooks/useAnnotations';
 import HeaderControls from '@/components/layout/Header';
 import { MetricField } from '@/services/metrics.service';
 import { Dataset } from '@/services/datasets.service';
@@ -61,6 +62,10 @@ export default function Home(): JSX.Element {
   const chartError = metricsQuery.isError ? metricsQuery.error : null;
   const chartLoading = metricsQuery.isPending || metricsQuery.isFetching;
 
+  const annotationsQuery = useAnnotationsQuery();
+
+  const chartAnnotations = annotationsQuery.data?.annotations ?? [];
+
   const handleSelectDataset = (dataset: Dataset) => {
     setSelectedDatasetId(dataset.id);
   };
@@ -110,7 +115,7 @@ export default function Home(): JSX.Element {
                     metrics={selectedFields}
                     loading={chartLoading}
                     error={chartError}
-                    annotations={metricsQuery.data?.annotations}
+                    annotations={chartAnnotations}
                   />
                 ) : (
                   <div className='rounded-lg border border-zinc-200 bg-white p-4 text-sm text-zinc-700 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200'>

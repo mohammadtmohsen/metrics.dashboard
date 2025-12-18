@@ -16,7 +16,7 @@ import {
 } from '@/services/annotations.service';
 import { NormalizedApiError } from '@/services/api';
 
-const annotationsKey = ['annotations'];
+export const annotationsKey = ['annotations'];
 
 export type UseAnnotationsResult = {
   annotationsQuery: UseQueryResult<AnnotationsListResponse, NormalizedApiError>;
@@ -32,13 +32,20 @@ export type UseAnnotationsResult = {
   >;
 };
 
-export const useAnnotations = (): UseAnnotationsResult => {
-  const queryClient = useQueryClient();
-
-  const annotationsQuery = useQuery<AnnotationsListResponse, NormalizedApiError>({
+export const useAnnotationsQuery = (): UseQueryResult<
+  AnnotationsListResponse,
+  NormalizedApiError
+> => {
+  return useQuery<AnnotationsListResponse, NormalizedApiError>({
     queryKey: annotationsKey,
     queryFn: fetchAnnotations,
   });
+};
+
+export const useAnnotations = (): UseAnnotationsResult => {
+  const queryClient = useQueryClient();
+
+  const annotationsQuery = useAnnotationsQuery();
 
   const createAnnotationMutation = useMutation<
     CreateAnnotationResponse,
