@@ -25,7 +25,7 @@ export function HeaderControls({
 
   return (
     <header className='mx-auto flex w-full max-w-350 flex-col gap-3 border-b border-zinc-200 bg-white/80 px-4 py-3 text-zinc-900 shadow-sm backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-100 md:px-6'>
-      <div className='flex items-center justify-between'>
+      <div className='flex flex-wrap items-center gap-3'>
         {/* Left Side: Title */}
         <div className='flex items-center gap-3'>
           <Image
@@ -46,7 +46,7 @@ export function HeaderControls({
         </div>
 
         {/* Right Side: Live Status + Icon Group */}
-        <div className='flex items-center gap-3'>
+        <div className='flex w-full items-center gap-3 justify-end sm:w-auto sm:ml-auto'>
           <div className='flex items-center gap-1 rounded-lg border border-zinc-200 bg-white/50 p-1 dark:border-zinc-800 dark:bg-zinc-900/50'>
             {/* Theme Toggle */}
             <button
