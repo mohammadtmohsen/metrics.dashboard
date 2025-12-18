@@ -9,7 +9,7 @@ import MetricsToolbar, {
 } from '@/components/metrics/MetricsToolbar';
 import useDatasets from '@/hooks/useDatasets';
 import useMetrics from '@/hooks/useMetrics';
-import HeaderControls from '@/components/layout/HeaderControls';
+import HeaderControls from '@/components/layout/Header';
 import { MetricField } from '@/services/metrics.service';
 import { Dataset } from '@/services/datasets.service';
 
@@ -72,16 +72,16 @@ export default function Home(): JSX.Element {
         onToggleMaximize={() => setIsChartMaximized((prev) => !prev)}
       />
       <div className='flex-1 overflow-y-auto px-4 py-6 md:px-6'>
-        <div className='mx-auto flex max-w-[1400px] flex-col gap-6 lg:flex-row'>
+        <div className='mx-auto flex max-w-350 flex-col gap-6 lg:flex-row'>
           {/* Left Column: Dataset Browser - Animated visibility */}
           <div
             className={`overflow-hidden transition-all duration-300 ease-in-out ${
               isChartMaximized
                 ? 'w-0 opacity-0 lg:w-0'
-                : 'w-full opacity-100 lg:w-[340px]'
+                : 'w-full opacity-100 lg:w-85'
             }`}
           >
-            <div className='w-full lg:w-[340px]'>
+            <div className='w-full lg:w-85'>
               <DatasetBrowser
                 selectedId={effectiveDatasetId}
                 onSelect={handleSelectDataset}

@@ -1,27 +1,17 @@
 import api from './api';
-
-export type Annotation = {
-  id: string;
-  timestamp: number;
-  text: string;
-};
-
-export type CreateAnnotationPayload = {
-  timestamp: number;
-  text: string;
-};
-
-export type CreateAnnotationResponse = {
-  annotation: Annotation;
-};
-
-export type DeleteAnnotationResponse = {
-  id: string;
-};
-
-export type AnnotationsListResponse = {
-  annotations: Annotation[];
-};
+import type {
+  CreateAnnotationPayload,
+  CreateAnnotationResponse,
+  DeleteAnnotationResponse,
+  AnnotationsListResponse,
+} from '@/types/annotation';
+export type {
+  Annotation,
+  CreateAnnotationPayload,
+  CreateAnnotationResponse,
+  DeleteAnnotationResponse,
+  AnnotationsListResponse,
+} from '@/types/annotation';
 
 export const fetchAnnotations = async (): Promise<AnnotationsListResponse> => {
   const response = await api.get<AnnotationsListResponse>('/annotations');
